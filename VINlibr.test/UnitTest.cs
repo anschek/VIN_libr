@@ -41,7 +41,6 @@ namespace VINlib.test
                 }
                 catch (ArgumentException) { }
                 catch (Exception) { Assert.Fail($"symbol '{c}' should throw an ArgumentException"); }
-
             }
         }
 
@@ -77,9 +76,21 @@ namespace VINlib.test
                 }
                 catch (IndexOutOfRangeException) { }
                 catch (Exception) { Assert.Fail($"index [{index}] should throw an IndexOutOfRangeException"); }
-
             }
-
+        }        
+        
+        [TestMethod]
+        public void TestMethod_IChecksumVerification_VINexist()
+        {
+            Assert.AreEqual(true, VIN.ChecksumVerification("JHMCM56557C404453"));
+            Assert.AreEqual(true, VIN.ChecksumVerification("WBAGB330402182616"));
+        }        
+        
+        [TestMethod]
+        public void TestMethod_IChecksumVerification_VINdoesNotExist()
+        {
+            Assert.AreEqual(false, VIN.ChecksumVerification("WAUZZZ44ZEN096063"));
+            Assert.AreEqual(false, VIN.ChecksumVerification("WVWDB4505LK234567"));
         }
     }
 }

@@ -29,7 +29,13 @@
         {
             if (identNumber.Length == 17)
             {
-
+                if (identNumber[8] != 'x' && identNumber[8] != 'X' && !(identNumber[8] >= 48 && identNumber[8] <= 57)) return false;
+                int checkSum = 0;
+                for (int i = 0; i < identNumber.Length; ++i)
+                    checkSum += NumberEquivalent(identNumber[i]) * IndexWeight(i);
+                int expectedDifference = identNumber[8] == 'X' || identNumber[8] == 'x'? 10 : NumberEquivalent(identNumber[8]);
+               
+                if(checkSum - checkSum / 11 * 11 == expectedDifference) return true;
             }
             return false;
         }
