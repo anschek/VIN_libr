@@ -1,4 +1,4 @@
-
+Ôªø
 using System;
 
 namespace VINlib.test
@@ -33,7 +33,7 @@ namespace VINlib.test
         [TestMethod]
         public void TestMethod_NumberEquivalent_CheckOtherSymbols()
         {
-            char[] ExceptionThrowingSymbols = new char[] { ' ', '/', '&', '?', 'Ù', '‘' };
+            char[] ExceptionThrowingSymbols = new char[] { ' ', '/', '&', '?', '—Ñ', '–§' };
             foreach (char c in ExceptionThrowingSymbols)
             {
                 try
@@ -98,18 +98,18 @@ namespace VINlib.test
         [TestMethod]
         public void TestMethod_GetGeographicalArea_ExpectedEqualsResult()
         {
-            Assert.AreEqual("¿ÙËÍ‡", VIN.WMIinfo.GetGeographicalArea('a'));
-            Assert.AreEqual("¿ÙËÍ‡", VIN.WMIinfo.GetGeographicalArea('C'));
-            Assert.AreEqual("¿ÁËˇ", VIN.WMIinfo.GetGeographicalArea('o'));
-            Assert.AreEqual("¿ÁËˇ", VIN.WMIinfo.GetGeographicalArea('l'));
-            Assert.AreEqual("ŒÍÂ‡ÌËˇ", VIN.WMIinfo.GetGeographicalArea('6'));
-            Assert.AreEqual("ﬁÊÌ‡ˇ ¿ÏÂËÍ‡", VIN.WMIinfo.GetGeographicalArea('9'));
+            Assert.AreEqual("–ê—Ñ—Ä–∏–∫–∞", VIN.WMIinfo.GetGeographicalArea('a'));
+            Assert.AreEqual("–ê—Ñ—Ä–∏–∫–∞", VIN.WMIinfo.GetGeographicalArea('C'));
+            Assert.AreEqual("–ê–∑–∏—è", VIN.WMIinfo.GetGeographicalArea('o'));
+            Assert.AreEqual("–ê–∑–∏—è", VIN.WMIinfo.GetGeographicalArea('l'));
+            Assert.AreEqual("–û–∫–µ–∞–Ω–∏—è", VIN.WMIinfo.GetGeographicalArea('6'));
+            Assert.AreEqual("–Æ–∂–Ω–∞—è –ê–º–µ—Ä–∏–∫–∞", VIN.WMIinfo.GetGeographicalArea('9'));
             
         }        
         [TestMethod]
         public void TestMethod_GetGeographicalArea_SymbolNotAcceptable()
         {
-            char[] ExceptionThrowingSymbols = new char[] { 'Ù','}','/','%', (char)47, (char)91 };
+            char[] ExceptionThrowingSymbols = new char[] { '—Ñ','}','/','%', (char)47, (char)91 };
             foreach (char c in ExceptionThrowingSymbols)
             {
                 try
@@ -121,5 +121,8 @@ namespace VINlib.test
                 catch (Exception) { Assert.Fail($"Symbol '{c}' should throw an IndexOutOfRangeException"); }
             }
         }
+
+        //CharIsIncluded
+        //GetCountry
     }
 }
