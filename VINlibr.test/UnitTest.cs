@@ -1,4 +1,6 @@
 
+using System;
+
 namespace VINlib.test
 {
     [TestClass]
@@ -91,6 +93,33 @@ namespace VINlib.test
         {
             Assert.AreEqual(false, VIN.ChecksumVerification("WAUZZZ44ZEN096063"));
             Assert.AreEqual(false, VIN.ChecksumVerification("WVWDB4505LK234567"));
+        }        
+        
+        [TestMethod]
+        public void TestMethod_GetGeographicalArea_ExpectedEqualsResult()
+        {
+            Assert.AreEqual("Африка", VIN.WMIinfo.GetGeographicalArea('a'));
+            Assert.AreEqual("Африка", VIN.WMIinfo.GetGeographicalArea('C'));
+            Assert.AreEqual("Азия", VIN.WMIinfo.GetGeographicalArea('o'));
+            Assert.AreEqual("Азия", VIN.WMIinfo.GetGeographicalArea('l'));
+            Assert.AreEqual("Океания", VIN.WMIinfo.GetGeographicalArea('6'));
+            Assert.AreEqual("Южная Америка", VIN.WMIinfo.GetGeographicalArea('9'));
+            
+        }        
+        [TestMethod]
+        public void TestMethod_GetGeographicalArea_SymbolNotAcceptable()
+        {
+            char[] ExceptionThrowingSymbols = new char[] { 'ф','}','/','%', (char)47, (char)91 };
+            foreach (char c in ExceptionThrowingSymbols)
+            {
+                try
+                {
+                    Assert.AreEqual("", VIN.WMIinfo.GetGeographicalArea(c));
+                    Assert.Fail($"Symbol '{c}' should throw an exception");
+                }
+                catch (IndexOutOfRangeException) { }
+                catch (Exception) { Assert.Fail($"Symbol '{c}' should throw an IndexOutOfRangeException"); }
+            }
         }
     }
 }
