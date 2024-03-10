@@ -60,9 +60,11 @@ namespace VINlib
                 throw new IndexOutOfRangeException($"Acceptable symbols: A-Z, 0-9. '{c}' is not included.");
             }
 
-            internal static bool CharIsIncluded(char c, char start, char end, int num)
+            internal static bool CharIsIncluded(char c, char start, char end, int num=0)
             {//is number
                 if (c <= 57) c += (char)43;//numbers now - 91:100, letters - 65:90
+                if (start <= 57) start += (char)43;
+                if (end <= 57) end += (char)43;
                 if(c>=start && c <= end) return true;
                 else if (c>= end) return false;
                 throw new IndexOutOfRangeException($"'{c}' don't using to WMI {num} position");

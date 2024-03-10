@@ -79,22 +79,22 @@ namespace VINlib.test
                 catch (IndexOutOfRangeException) { }
                 catch (Exception) { Assert.Fail($"index [{index}] should throw an IndexOutOfRangeException"); }
             }
-        }        
-        
+        }
+
         [TestMethod]
         public void TestMethod_IChecksumVerification_VINexist()
         {
             Assert.AreEqual(true, VIN.ChecksumVerification("JHMCM56557C404453"));
             Assert.AreEqual(true, VIN.ChecksumVerification("WBAGB330402182616"));
-        }        
-        
+        }
+
         [TestMethod]
         public void TestMethod_IChecksumVerification_VINdoesNotExist()
         {
             Assert.AreEqual(false, VIN.ChecksumVerification("WAUZZZ44ZEN096063"));
             Assert.AreEqual(false, VIN.ChecksumVerification("WVWDB4505LK234567"));
-        }        
-        
+        }
+
         [TestMethod]
         public void TestMethod_GetGeographicalArea_ExpectedEqualsResult()
         {
@@ -104,12 +104,13 @@ namespace VINlib.test
             Assert.AreEqual("Азия", VIN.WMIinfo.GetGeographicalArea('l'));
             Assert.AreEqual("Океания", VIN.WMIinfo.GetGeographicalArea('6'));
             Assert.AreEqual("Южная Америка", VIN.WMIinfo.GetGeographicalArea('9'));
-            
-        }        
+
+        }
+
         [TestMethod]
         public void TestMethod_GetGeographicalArea_SymbolNotAcceptable()
         {
-            char[] ExceptionThrowingSymbols = new char[] { 'ф','}','/','%', (char)47, (char)91 };
+            char[] ExceptionThrowingSymbols = new char[] { 'ф', '}', '/', '%', (char)47, (char)91 };
             foreach (char c in ExceptionThrowingSymbols)
             {
                 try
@@ -122,7 +123,39 @@ namespace VINlib.test
             }
         }
 
-        //CharIsIncluded
+        [TestMethod]
+        public void TestMethod_CharIsIncluded_CharIsOrWillBeIncluded()
+        {
+            (char, char, char)[] CharsIsIncluded = new (char, char, char)[] {
+                ('A','A','A'), ('A','B','A'),('A','B','B'), ('A','C','B'),
+                ('A','9','0'), ('A','9','9'),('A','9','Z'), ('Y','9','Z')};
+            (char, char, char)[] CharsWillBeIncluded = new (char, char, char)[] {
+                ('A','A','B'), ('A','B','C'),('A','Z','0'), ('A','0','1'),
+                ('0','3','9')};
+            foreach ((char start, char end, char c) in CharsIsIncluded)
+                Assert.AreEqual(true, VIN.WMIinfo.CharIsIncluded(c, start, end));
+            foreach ((char start, char end, char c) in CharsWillBeIncluded)
+                Assert.AreEqual(false, VIN.WMIinfo.CharIsIncluded(c, start, end));
+        }
+
+        [TestMethod]
+        public void TestMethod_CharIsIncluded_CharCanNoBeFound()
+        {
+            (char, char, char)[] CharsCanNoBeFound = new (char, char, char)[] {
+                ('A','B',(char)('A'-1)),('B','Z','A'),('0','9','Z'),
+                ('3','9','0'), ('A','9',(char)('9'+1))};
+            foreach ((char start, char end, char c) in CharsCanNoBeFound)
+            {
+                try
+                {
+                    Assert.AreEqual("", VIN.WMIinfo.CharIsIncluded(c, start, end));
+                    Assert.Fail($"Symbol '{c}' cannot be found in ('{start}', '{end})");
+                }
+                catch (IndexOutOfRangeException) { }
+                catch (Exception) { Assert.Fail($"Symbol '{c}' should throw an IndexOutOfRangeException " +
+                    $"when going beyond the boundaries of the sequence ('{start}', '{end})" ); }
+            }
+        }
         //GetCountry
     }
 }
