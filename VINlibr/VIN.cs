@@ -69,15 +69,19 @@ namespace VINlib
 
             internal static bool CharIsIncluded(char c, char start, char end, int num=0)
             {//is number
-                if (c <= 57) c += (char)43;//numbers now - 91:100, letters - 65:90
-                if (start <= 57) start += (char)43;
-                if (end <= 57) end += (char)43;
+                if (c == '0') c = (char)100;
+                else if (c <= 57) c += (char)42;//numbers now - 91:100, letters - 65:90
+                if (start == '0') start = (char)100;
+                else if (start <= 57) start += (char)42;
+                if (end == '0') end = (char)100;
+                else if (end <= 57) end += (char)42;
+
                 if(c>=start && c <= end) return true;
-                else if (c>= end) return false;
+                else if (c>= end && c<=100) return false;
                 throw new IndexOutOfRangeException($"'{c}' don't using to WMI {num} position");
             }
 
-            internal string GetCountry(string cc)
+            internal static string GetCountry(string cc)
             {
                 cc = cc.ToUpper();
                 string[] startRange = {"AJ",    "BA",   "BF",   "BL",   "CA",   "CF",   "CL",   "DA",   "DF",   "DL",   "EA",   

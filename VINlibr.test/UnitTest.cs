@@ -146,10 +146,10 @@ namespace VINlib.test
         {
             (char, char, char)[] CharsIsIncluded = new (char, char, char)[] {
                 ('A','A','A'), ('A','B','A'),('A','B','B'), ('A','C','B'),
-                ('A','9','0'), ('A','9','9'),('A','9','Z'), ('Y','9','Z')};
+                ('A','0','9'), ('A','9','9'),('A','9','Z'), ('Y','9','Z')};
             (char, char, char)[] CharsWillBeIncluded = new (char, char, char)[] {
-                ('A','A','B'), ('A','B','C'),('A','Z','0'), ('A','0','1'),
-                ('0','3','9')};
+                ('A','A','B'), ('A','B','C'),('A','Z','0'), ('A','8','0'),
+                ('1','9','0')};
             foreach ((char start, char end, char c) in CharsIsIncluded)
                 Assert.AreEqual(true, VIN.WMIinfo.CharIsIncluded(c, start, end));
             foreach ((char start, char end, char c) in CharsWillBeIncluded)
@@ -160,8 +160,8 @@ namespace VINlib.test
         public void TestMethod_CharIsIncluded_CharCanNoBeFound()
         {
             (char, char, char)[] CharsCanNoBeFound = new (char, char, char)[] {
-                ('A','B',(char)('A'-1)),('B','Z','A'),('0','9','Z'),
-                ('3','9','0'), ('A','9',(char)('9'+1))};
+                ('A','B',(char)('A'-1)),('B','Z','A'),('9','0','Z'),
+                ('3','0','1'), ('A','0',(char)(2000))};
             foreach ((char start, char end, char c) in CharsCanNoBeFound)
             {
                 try
@@ -171,8 +171,22 @@ namespace VINlib.test
                 }
                 catch (IndexOutOfRangeException) { }
                 catch (Exception) { Assert.Fail($"Symbol '{c}' should throw an IndexOutOfRangeException " +
-                    $"when going beyond the boundaries of the sequence ('{start}', '{end})" ); }
+                    $"when going beyond the boundaries of the sequence ('{start}', '{end}')" ); }
             }
+        }        
+
+        //[TestMethod]
+        //public void TestMethod_GetCountry_ExpectedEqualsResult()
+        //{
+        //    Assert.AreEqual("", VIN.WMIinfo.GetCountry(""));
+
+        //}
+
+        [TestMethod]
+        public void TestMethod_GetCountry_CountryNotFound()
+        {
+            string[] UnusedCodes = new string[] {"CS", "C9","C0", "EL","E8", "E0","NT", "NY", "N5","N0", "","", "","", "","", "","", "","", "", };
+
         }
         //GetCountry
     }
