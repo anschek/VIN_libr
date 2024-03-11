@@ -82,14 +82,32 @@ namespace VINlib.test
         }
 
         [TestMethod]
-        public void TestMethod_IChecksumVerification_VINexist()
+        public void TestMethod_ValidityCheck_CodeIsValid()
+        {
+            Assert.AreEqual(true, VIN.ValidityCheck("aaaaaaaaaaaaaaaaa"));
+            Assert.AreEqual(true, VIN.ValidityCheck("AAAAAAAAAAAAAAAAA"));
+            Assert.AreEqual(true, VIN.ValidityCheck("AAAAAA92AAAAbAA78"));
+            Assert.AreEqual(true, VIN.ValidityCheck("12312312312312312"));
+        }
+        
+        [TestMethod]
+        public void TestMethod_ValidityCheck_CodeIsInvalid()
+        {
+            Assert.AreEqual(false, VIN.ValidityCheck("aaaa"));
+            Assert.AreEqual(false, VIN.ValidityCheck("AAAAAAAAAAAAAAA/A"));
+            Assert.AreEqual(false, VIN.ValidityCheck("AAAAAA92AAAAbAQIO"));
+            Assert.AreEqual(false, VIN.ValidityCheck("12312312312312312AK"));
+        }
+
+        [TestMethod]
+        public void TestMethod_ChecksumVerification_VINexist()
         {
             Assert.AreEqual(true, VIN.ChecksumVerification("JHMCM56557C404453"));
             Assert.AreEqual(true, VIN.ChecksumVerification("WBAGB330402182616"));
         }
 
         [TestMethod]
-        public void TestMethod_IChecksumVerification_VINdoesNotExist()
+        public void TestMethod_ChecksumVerification_VINdoesNotExist()
         {
             Assert.AreEqual(false, VIN.ChecksumVerification("WAUZZZ44ZEN096063"));
             Assert.AreEqual(false, VIN.ChecksumVerification("WVWDB4505LK234567"));

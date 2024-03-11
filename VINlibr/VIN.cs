@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 
 [assembly: InternalsVisibleTo("VINlibr.test")]
 
@@ -28,10 +29,16 @@ namespace VINlib
             else throw new IndexOutOfRangeException($"The index must be between 0 and 16, but it is {index}");
         }
 
+        internal static bool ValidityCheck(string identNumber)
+        {
+            Regex regex = new Regex("^[A-HJ-NPR-Z0-9]{17}$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            return regex.IsMatch(identNumber);
+        }
+
         //returns true if verification is seccessful
         public static bool ChecksumVerification(string identNumber)
         {
-            if (identNumber.Length == 17)
+            if (ValidityCheck(identNumber))
             {
                 if (identNumber[8] != 'x' && identNumber[8] != 'X' && !(identNumber[8] >= 48 && identNumber[8] <= 57)) return false;
                 int checkSum = 0;
@@ -103,9 +110,6 @@ namespace VINlib
                 }
                 throw new IndexOutOfRangeException($"'{cc}' don't using to WMI");
             }
-
-
-
 
             public WMIinfo(string firstSymbols)
             {
