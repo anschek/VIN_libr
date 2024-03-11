@@ -167,26 +167,48 @@ namespace VINlib.test
                 try
                 {
                     Assert.AreEqual("", VIN.WMIinfo.CharIsIncluded(c, start, end));
-                    Assert.Fail($"Symbol '{c}' cannot be found in ('{start}', '{end})");
+                    Assert.Fail($"Symbol '{c}' cannot be found in ('{start}', '{end}')");
                 }
                 catch (IndexOutOfRangeException) { }
                 catch (Exception) { Assert.Fail($"Symbol '{c}' should throw an IndexOutOfRangeException " +
                     $"when going beyond the boundaries of the sequence ('{start}', '{end}')" ); }
             }
-        }        
+        }
 
-        //[TestMethod]
-        //public void TestMethod_GetCountry_ExpectedEqualsResult()
-        //{
-        //    Assert.AreEqual("", VIN.WMIinfo.GetCountry(""));
-
-        //}
+        [TestMethod]
+        public void TestMethod_GetCountry_ExpectedEqualsResult()
+        {
+            Assert.AreEqual("Кот-д’Ивуар", VIN.WMIinfo.GetCountry("AJ"));
+            Assert.AreEqual("Кот-д’Ивуар", VIN.WMIinfo.GetCountry("AL"));
+            Assert.AreEqual("Южная Корея", VIN.WMIinfo.GetCountry("KR"));
+            Assert.AreEqual("Южная Корея", VIN.WMIinfo.GetCountry("KN"));
+            Assert.AreEqual("США", VIN.WMIinfo.GetCountry("4A"));
+            Assert.AreEqual("США", VIN.WMIinfo.GetCountry("59"));
+            Assert.AreEqual("Австралия", VIN.WMIinfo.GetCountry("6W"));
+            Assert.AreEqual("Австралия", VIN.WMIinfo.GetCountry("6C"));
+            Assert.AreEqual("Бразилия", VIN.WMIinfo.GetCountry("93"));
+            Assert.AreEqual("Бразилия", VIN.WMIinfo.GetCountry("96"));
+        }
 
         [TestMethod]
         public void TestMethod_GetCountry_CountryNotFound()
         {
-            string[] UnusedCodes = new string[] {"CS", "C9","C0", "EL","E8", "E0","NT", "NY", "N5","N0", "","", "","", "","", "","", "","", "", };
-
+            string[] UnusedCodes = new string[] {"CS", "C9","C0", "EL","E8","E0","NT", "NY", 
+                "N5","N0", "U8","U9", "U0","ZS", "ZU","ZW", "6X","6Z", "61","69", "60", 
+                "7F", "71", "79", "70", "83", "89", "80", "90" };
+            foreach (string cc in UnusedCodes)
+            {
+                try
+                {
+                    Assert.AreEqual("", VIN.WMIinfo.GetCountry(cc));
+                    Assert.Fail($"'{cc}' should throw an exception");
+                }
+                catch (IndexOutOfRangeException) { }
+                catch (Exception)
+                {
+                    Assert.Fail($"'{cc}' should throw an IndexOutOfRangeException");
+                }
+            }
         }
         //GetCountry
     }
