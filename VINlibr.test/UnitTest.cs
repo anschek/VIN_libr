@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Diagnostics.Metrics;
 
 namespace VINlib.test
 {
@@ -116,12 +117,12 @@ namespace VINlib.test
         [TestMethod]
         public void TestMethod_GetGeographicalArea_ExpectedEqualsResult()
         {
-            Assert.AreEqual("Африка", VIN.WMIinfo.GetGeographicalArea('a'));
-            Assert.AreEqual("Африка", VIN.WMIinfo.GetGeographicalArea('C'));
-            Assert.AreEqual("Азия", VIN.WMIinfo.GetGeographicalArea('o'));
-            Assert.AreEqual("Азия", VIN.WMIinfo.GetGeographicalArea('l'));
-            Assert.AreEqual("Океания", VIN.WMIinfo.GetGeographicalArea('6'));
-            Assert.AreEqual("Южная Америка", VIN.WMIinfo.GetGeographicalArea('9'));
+            Assert.AreEqual("Африка", VINinfo.GetGeographicalArea('A'));
+            Assert.AreEqual("Африка", VINinfo.GetGeographicalArea('C'));
+            Assert.AreEqual("Азия", VINinfo.GetGeographicalArea('N'));
+            Assert.AreEqual("Азия", VINinfo.GetGeographicalArea('L'));
+            Assert.AreEqual("Океания", VINinfo.GetGeographicalArea('6'));
+            Assert.AreEqual("Южная Америка", VINinfo.GetGeographicalArea('9'));
 
         }
 
@@ -133,7 +134,7 @@ namespace VINlib.test
             {
                 try
                 {
-                    Assert.AreEqual("", VIN.WMIinfo.GetGeographicalArea(c));
+                    VINinfo.GetGeographicalArea(c);
                     Assert.Fail($"Symbol '{c}' should throw an exception");
                 }
                 catch (IndexOutOfRangeException) { }
@@ -151,9 +152,9 @@ namespace VINlib.test
                 ('A','A','B'), ('A','B','C'),('A','Z','0'), ('A','8','0'),
                 ('1','9','0')};
             foreach ((char start, char end, char c) in CharsIsIncluded)
-                Assert.AreEqual(true, VIN.WMIinfo.CharIsIncluded(c, start, end));
+                Assert.AreEqual(true, VINinfo.CharIsIncluded(c, start, end));
             foreach ((char start, char end, char c) in CharsWillBeIncluded)
-                Assert.AreEqual(false, VIN.WMIinfo.CharIsIncluded(c, start, end));
+                Assert.AreEqual(false, VINinfo.CharIsIncluded(c, start, end));
         }
 
         [TestMethod]
@@ -166,7 +167,7 @@ namespace VINlib.test
             {
                 try
                 {
-                    Assert.AreEqual("", VIN.WMIinfo.CharIsIncluded(c, start, end));
+                    VINinfo.CharIsIncluded(c, start, end);
                     Assert.Fail($"Symbol '{c}' cannot be found in ('{start}', '{end}')");
                 }
                 catch (IndexOutOfRangeException) { }
@@ -178,29 +179,29 @@ namespace VINlib.test
         [TestMethod]
         public void TestMethod_GetCountry_ExpectedEqualsResult()
         {
-            Assert.AreEqual("Кот-д’Ивуар", VIN.WMIinfo.GetCountry("AJ"));
-            Assert.AreEqual("Кот-д’Ивуар", VIN.WMIinfo.GetCountry("AL"));
-            Assert.AreEqual("Южная Корея", VIN.WMIinfo.GetCountry("KR"));
-            Assert.AreEqual("Южная Корея", VIN.WMIinfo.GetCountry("KN"));
-            Assert.AreEqual("США", VIN.WMIinfo.GetCountry("4A"));
-            Assert.AreEqual("США", VIN.WMIinfo.GetCountry("59"));
-            Assert.AreEqual("Австралия", VIN.WMIinfo.GetCountry("6W"));
-            Assert.AreEqual("Австралия", VIN.WMIinfo.GetCountry("6C"));
-            Assert.AreEqual("Бразилия", VIN.WMIinfo.GetCountry("93"));
-            Assert.AreEqual("Бразилия", VIN.WMIinfo.GetCountry("96"));
+            Assert.AreEqual("Кот-д’Ивуар", VINinfo.GetCountry("AJ"));
+            Assert.AreEqual("Кот-д’Ивуар", VINinfo.GetCountry("AL"));
+            Assert.AreEqual("Южная Корея", VINinfo.GetCountry("KR"));
+            Assert.AreEqual("Южная Корея", VINinfo.GetCountry("KN"));
+            Assert.AreEqual("США", VINinfo.GetCountry("4A"));
+            Assert.AreEqual("США", VINinfo.GetCountry("59"));
+            Assert.AreEqual("Австралия", VINinfo.GetCountry("6W"));
+            Assert.AreEqual("Австралия", VINinfo.GetCountry("6C"));
+            Assert.AreEqual("Бразилия", VINinfo.GetCountry("93"));
+            Assert.AreEqual("Бразилия", VINinfo.GetCountry("96"));
         }
 
         [TestMethod]
         public void TestMethod_GetCountry_CountryNotFound()
         {
             string[] UnusedCodes = new string[] {"CS", "C9","C0", "EL","E8","E0","NT", "NY", 
-                "N5","N0", "U8","U9", "U0","ZS", "ZU","ZW", "6X","6Z", "61","69", "60", 
+                "N5","N0", "U8","U9", "U0","ZS", "ZU","ZW", "6X","6Z", "61","69","60", 
                 "7F", "71", "79", "70", "83", "89", "80", "90" };
             foreach (string cc in UnusedCodes)
             {
                 try
                 {
-                    Assert.AreEqual("", VIN.WMIinfo.GetCountry(cc));
+                    VINinfo.GetCountry(cc);
                     Assert.Fail($"'{cc}' should throw an exception");
                 }
                 catch (IndexOutOfRangeException) { }
@@ -209,7 +210,93 @@ namespace VINlib.test
                     Assert.Fail($"'{cc}' should throw an IndexOutOfRangeException");
                 }
             }
+        }        
+        
+        [TestMethod]
+        public void TestMethod_GetProductionYear_ExpectedEqualsResult()
+        {
+            Assert.AreEqual(2010, VINinfo.GetProductionYear('A'));
+            Assert.AreEqual(2012, VINinfo.GetProductionYear('C'));
+            Assert.AreEqual(2018, VINinfo.GetProductionYear('J'));
+            Assert.AreEqual(2000, VINinfo.GetProductionYear('Y'));
+            Assert.AreEqual(2001, VINinfo.GetProductionYear('1'));
+            Assert.AreEqual(2007, VINinfo.GetProductionYear('7'));
+        }        
+        
+        [TestMethod]
+        public void TestMethod_GetProductionYear_YearCharIsInvalid()
+        {
+            char[] UnusedChars = new char[] {'a','O','Q', 'I', 'U', 'Z', '0', '/', '$', 'а', 'А' };
+            foreach (char c in UnusedChars)
+            {
+                try
+                {
+                    VINinfo.GetProductionYear(c);
+                    Assert.Fail($"'{c}' should throw an exception");
+                }
+                catch (IndexOutOfRangeException) { }
+                catch (Exception)
+                {
+                    Assert.Fail($"'{c}' should throw an IndexOutOfRangeException");
+                }
+            }
+        }        
+        
+        [TestMethod]
+        public void TestMethod_VINandVINinfoConstructors_ExpectedEqualsResult()
+        {
+            string expectedIdentNumber = "JHMCM56557C404453";
+            string expectedGeographicalArea = "Азия";
+            string expectedCountry = "Япония";
+            bool expectedIsLargeManufacturer = true;
+            int expectedProductionYear = 2007;
+
+            VINinfo vin_info = VIN.DecodeVIN("JHMCM56557C404453");
+            Assert.AreEqual(expectedIdentNumber, vin_info.identNumber);
+            Assert.AreEqual(expectedGeographicalArea, vin_info.geographicalArea);
+            Assert.AreEqual(expectedCountry, vin_info.country);
+            Assert.AreEqual(expectedIsLargeManufacturer, vin_info.isLargeManufacturer);
+            Assert.AreEqual(expectedProductionYear, vin_info.productionYear);
         }
-        //GetCountry
+
+        [TestMethod]
+        public void TestMethod_VINconstructor_IsDoesntExist()
+        {
+            string[] didnotPassChecksumVerification = new string[] { "JHMCM56557C404450", "AHMCM56557C40445F", "AHMCM5655XC404451",
+            "JHMCM56557C40445Q", "JHMCM56557C4044509", "АHMCM5655XC404453" };
+
+            foreach (string identNumber in didnotPassChecksumVerification)
+            {
+                try
+                {
+                    VINinfo vin_info = VIN.DecodeVIN(identNumber);
+                    Assert.Fail($"Calling the constructor with the argument '{identNumber}' should throw an exception");
+                }
+                catch (InvalidOperationException) { }
+                catch (Exception)
+                {
+                    Assert.Fail($"Calling the constructor with the argument '{identNumber}' should throw an InvalidOperationException");
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestMethod_ToString_ExpectedEqualsResult()
+        {
+            VINinfo vin_info = VIN.DecodeVIN("JHMCM56557C404453");
+
+            string expectedString = $"VIN: JHMCM56557C404453\n"
+                + "WMI: JHM\n"
+                + "VDS: CM5655\n"
+                + "VIS: 7C404453\n\n"
+                + "Country: Япония\n"
+                + "Geographical area: Азия\n"
+                + "Production year: (1977|2007|2037)\n"
+                + "Manufacturer produces "
+                + "more"
+                + " than 500 road vehicles per year\n";
+
+            Assert.AreEqual(expectedString, vin_info.ToString());
+        }   
     }
 }
