@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Diagnostics.Metrics;
+using System.Reflection;
 
 namespace VINlib.test
 {
@@ -72,13 +73,8 @@ namespace VINlib.test
             int[] ExceptionThrowingIndexes = new int[] { -10, -1, 17, 20 };
             foreach (int index in ExceptionThrowingIndexes)
             {
-                try
-                {
-                    VIN.IndexWeight(index);
-                    Assert.Fail($"index [{index}] should throw an exception");
-                }
-                catch (IndexOutOfRangeException) { }
-                catch (Exception) { Assert.Fail($"index [{index}] should throw an IndexOutOfRangeException"); }
+                Action action = () => VIN.IndexWeight(index); 
+                Assert.ThrowsException<IndexOutOfRangeException>(action);
             }
         }
 
@@ -132,13 +128,8 @@ namespace VINlib.test
             char[] ExceptionThrowingSymbols = new char[] { 'ф', '}', '/', '%', (char)47, (char)91 };
             foreach (char c in ExceptionThrowingSymbols)
             {
-                try
-                {
-                    VINinfo.GetGeographicalArea(c);
-                    Assert.Fail($"Symbol '{c}' should throw an exception");
-                }
-                catch (IndexOutOfRangeException) { }
-                catch (Exception) { Assert.Fail($"Symbol '{c}' should throw an IndexOutOfRangeException"); }
+                Action action = () => VINinfo.GetGeographicalArea(c);
+                Assert.ThrowsException<IndexOutOfRangeException>(action);
             }
         }
 
@@ -165,14 +156,8 @@ namespace VINlib.test
                 ('3','0','1'), ('A','0',(char)(2000))};
             foreach ((char start, char end, char c) in CharsCanNoBeFound)
             {
-                try
-                {
-                    VINinfo.CharIsIncluded(c, start, end);
-                    Assert.Fail($"Symbol '{c}' cannot be found in ('{start}', '{end}')");
-                }
-                catch (IndexOutOfRangeException) { }
-                catch (Exception) { Assert.Fail($"Symbol '{c}' should throw an IndexOutOfRangeException " +
-                    $"when going beyond the boundaries of the sequence ('{start}', '{end}')" ); }
+                Action action = () => VINinfo.CharIsIncluded(c, start, end);
+                Assert.ThrowsException<IndexOutOfRangeException>(action);
             }
         }
 
@@ -199,16 +184,8 @@ namespace VINlib.test
                 "7F", "71", "79", "70", "83", "89", "80", "90" };
             foreach (string cc in UnusedCodes)
             {
-                try
-                {
-                    VINinfo.GetCountry(cc);
-                    Assert.Fail($"'{cc}' should throw an exception");
-                }
-                catch (IndexOutOfRangeException) { }
-                catch (Exception)
-                {
-                    Assert.Fail($"'{cc}' should throw an IndexOutOfRangeException");
-                }
+                Action action = () => VINinfo.GetCountry(cc);
+                Assert.ThrowsException<IndexOutOfRangeException>(action);
             }
         }        
         
@@ -229,16 +206,8 @@ namespace VINlib.test
             char[] UnusedChars = new char[] {'a','O','Q', 'I', 'U', 'Z', '0', '/', '$', 'а', 'А' };
             foreach (char c in UnusedChars)
             {
-                try
-                {
-                    VINinfo.GetProductionYear(c);
-                    Assert.Fail($"'{c}' should throw an exception");
-                }
-                catch (IndexOutOfRangeException) { }
-                catch (Exception)
-                {
-                    Assert.Fail($"'{c}' should throw an IndexOutOfRangeException");
-                }
+                Action action = () => VINinfo.GetProductionYear(c);
+                Assert.ThrowsException<IndexOutOfRangeException>(action);
             }
         }        
         
@@ -267,16 +236,8 @@ namespace VINlib.test
 
             foreach (string identNumber in didnotPassChecksumVerification)
             {
-                try
-                {
-                    VINinfo vin_info = VIN.DecodeVIN(identNumber);
-                    Assert.Fail($"Calling the constructor with the argument '{identNumber}' should throw an exception");
-                }
-                catch (InvalidOperationException) { }
-                catch (Exception)
-                {
-                    Assert.Fail($"Calling the constructor with the argument '{identNumber}' should throw an InvalidOperationException");
-                }
+                Action action = () => VIN.DecodeVIN(identNumber);
+                Assert.ThrowsException<InvalidOperationException>(action);
             }
         }
 
